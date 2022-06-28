@@ -5,6 +5,7 @@
   "dependencies": {
     "axios": "0.21.1",
     "cors": "2.8.5",
+    "datatables.net-dt": "^2.1.1",
     "ga-4-react": "^0.1.281",
     "link": "0.1.5",
     "prop-types": "^15.6.0",
