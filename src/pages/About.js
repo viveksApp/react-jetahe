@@ -5,6 +5,9 @@ import Details from './pages/Details';
 
 var ProgressBar = window.ReactProgressBarPlus;
 
+const $ = require('jquery');
+require('datatables.net')(window, $);
+
 class About extends React.Component {
   componentDidMount() {
     //this.props.stopLoading();
@@ -18,8 +21,34 @@ class About extends React.Component {
         items: response.data,
         pageTitle: 'Welcome Here',
       });
-      console.log(response.data);
+
       this.props.stopLoading();
+    });
+  }
+
+  //option 1
+  async getUsersData() {
+    const res = await axios.get('https://jsonplaceholder.typicode.com/users');
+    console.log(res.data);
+    this.setState({ loading: false, users: res.data });
+  }
+
+  componentDidMount() {
+    this.getUsersData().then(() => this.sync());
+  }
+
+  sync() {
+    this.$el = $(this.el);
+    this.$el.DataTable({
+      data: this.state.users, //option 1
+      // data: this.getUsersData1(), //option 2
+      columns: [
+        { title: 'Name', data: 'name' },
+        { title: 'Username', data: 'username' },
+        { title: 'Email', data: 'email' },
+        { title: 'Phone', data: 'phone' },
+        { title: 'Website', data: 'website' },
+      ],
     });
   }
 
@@ -30,7 +59,11 @@ class About extends React.Component {
           ‍ ‍<title>Datatable</title>
         </Helmet>
         <br />
-        <p>This is about us</p>
+        <table
+          className="display table"
+          width="100%"
+          ref={(el) => (this.el = el)}
+        ></table>
       </>
     );
   }
